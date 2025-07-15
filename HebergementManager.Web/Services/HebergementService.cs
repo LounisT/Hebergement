@@ -24,7 +24,7 @@ public class HebergementService
     {
         try
         {
-            var response = await _httpClient.GetAsync($"http://localhost:5000/api/Hebergements");
+            var response = await _httpClient.GetAsync($"{_baseUrl}/api/Hebergements");
             response.EnsureSuccessStatusCode();
             
             var json = await response.Content.ReadAsStringAsync();

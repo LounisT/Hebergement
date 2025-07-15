@@ -29,8 +29,8 @@ public class HebergementViewModel
     public string CodePostal { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "Le type d'hébergement est obligatoire")]
-    public string Type { get; set; }
-    
+    public TypeHebergement Type { get; set; }  // Utiliser l'enum directement
+                                               // 
     [Required(ErrorMessage = "La capacité maximale est obligatoire")]
     [Range(1, 50, ErrorMessage = "La capacité doit être entre 1 et 50 personnes")]
     [Display(Name = "Capacité maximale")]
@@ -49,13 +49,18 @@ public class HebergementViewModel
     public string AdresseComplete => $"{Adresse}, {CodePostal} {Ville}";
     public string PrixFormate => PrixParNuit.ToString("C");
     public string TypeDisplay => Type.ToString();
-    
+
     public enum TypeHebergement
     {
-        Appartement,
-        Maison,
-        Villa,
-        Studio,
-        Chambre
+        [Display(Name = "Appartement")]
+        Appartement = 0,
+        [Display(Name = "Maison")]
+        Maison = 1,
+        [Display(Name = "Villa")]
+        Villa = 2,
+        [Display(Name = "Studio")]
+        Studio = 3,
+        [Display(Name = "Chambre")]
+        Chambre = 4
     }
 }

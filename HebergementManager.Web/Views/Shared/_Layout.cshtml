@@ -1,0 +1,322 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Gestionnaire d'Hébergements</title>
+    <link rel="stylesheet" href="/css/app.css" asp-append-version="true" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gray': {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1e293b',
+                            850: '#0f172a',
+                            900: '#0f172a',
+                            950: '#020617'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    backdropBlur: {
+                        xs: '2px',
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        
+
+        /* Scrollbar moderne */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #6366f1, #8b5cf6);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #4f46e5, #7c3aed);
+        }
+
+        /* Effet glassmorphism moderne */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar glassmorphism */
+        .sidebar-glass {
+            background: linear-gradient(145deg, rgba(248, 250, 252, 0.9), rgba(241, 245, 249, 0.95));
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(203, 213, 225, 0.3);
+        }
+
+        /* Navigation hover effects */
+        .nav-item {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-item:hover::before {
+            left: 100%;
+        }
+
+        .nav-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Bouton gradient animé */
+        .btn-gradient {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+            background-size: 200% 200%;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+
+        /* Cards avec depth */
+        .card-elevation {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+            0 2px 4px -1px rgba(0, 0, 0, 0.06),
+            0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        .card-elevation:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04),
+            0 0 0 1px rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        /* Background pattern */
+        .bg-pattern {
+            background-image:
+                radial-gradient(circle at 25px 25px, rgba(99, 102, 241, 0.1) 2%, transparent 0%),
+                radial-gradient(circle at 75px 75px, rgba(139, 92, 246, 0.1) 2%, transparent 0%);
+            background-size: 100px 100px;
+        }
+
+        /* Status indicators */
+        .status-indicator {
+            position: relative;
+        }
+
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border: 2px solid white;
+            border-radius: 50%;
+            animation: pulse-slow 2s infinite;
+        }
+    </style>
+</head>
+<body class="antialiased bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 text-gray-900 font-sans overflow-hidden">
+<div class="flex h-screen bg-pattern">
+    <!-- Sidebar moderne -->
+    <aside class="w-80 sidebar-glass flex flex-col shadow-xl relative">
+        <!-- Header du sidebar -->
+        <div class="p-6 border-b border-white/20">
+            <div class="flex items-center space-x-4">
+                <div class="relative status-indicator">
+                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                        Hébergements Pro
+                    </h1>
+                    <p class="text-sm text-gray-500 font-medium">Management Suite</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation principale -->
+        <nav class="flex-1 p-6 space-y-8 overflow-y-auto">
+            <!-- Section principale -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 px-3">
+                    🚀 Tableau de bord
+                </h3>
+                <div class="space-y-1">
+                    <a asp-controller="Dashboard" asp-action="Index"
+                       class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md">
+                        <div class="w-5 h-5">
+                            <svg class="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <span class="font-semibold">Mes hébergements</span>
+                        <div class="ml-auto w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                    </a>
+
+                    <a asp-controller="Hebergements" asp-action="Index"
+                       class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-white/60 glass-card">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        <span class="font-medium">Liste Hébergements</span>
+                        <span class="ml-auto text-xs bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-2.5 py-1 rounded-full font-medium">24</span>
+                    </a>
+
+                    <a asp-controller="Reservations" asp-action="Index"
+                       class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-white/60 glass-card">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span class="font-medium">Réservations</span>
+                        <span class="ml-auto text-xs bg-gradient-to-r from-emerald-500 to-green-500 text-white px-2.5 py-1 rounded-full font-medium">12</span>
+                    </a>
+
+                    <a asp-controller="Clients" asp-action="Index"
+                       class="nav-item flex items-center space-x-3 px-4 py-3 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-white/60 glass-card">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        <span class="font-medium">Clients</span>
+                        <span class="ml-auto text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2.5 py-1 rounded-full font-medium">156</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Profil utilisateur -->
+        <div class="p-6 border-t border-white/20">
+            <div class="glass-card rounded-2xl p-4 hover:bg-white/80 transition-all duration-300 cursor-pointer card-elevation">
+                <div class="flex items-center space-x-3">
+                    <div class="relative">
+                        <div class="w-10 h-10 bg-gradient-to-br from-orange-400 to-pink-500 rounded-xl flex items-center justify-center">
+                            <span class="text-sm font-bold text-white">JD</span>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-gray-900 truncate">John Doe</p>
+                        <p class="text-xs text-gray-500 truncate">Administrateur</p>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header moderne -->
+        <header class="glass-card h-18 flex items-center justify-between px-8 py-4 border-b border-white/20 shadow-sm">
+            <div class="flex items-center space-x-6">
+                <div>
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent">
+                        @ViewData["Title"]
+                    </h1>
+                    <p class="text-sm text-gray-500 font-medium">Gérez vos hébergements en toute simplicité</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Zone de contenu -->
+        <main class="flex-1 overflow-y-auto bg-gradient-to-br from-white/50 to-blue-50/30">
+            <div class="p-8 space-y-6 animate-fade-in">
+                <!-- Alerts améliorées -->
+                @if (TempData["Success"] != null)
+                {
+                <div class="glass-card rounded-2xl p-5 border-l-4 border-green-500 bg-gradient-to-r from-green-50 to-emerald-50 card-elevation animate-slide-up">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-semibold text-green-800">Succès !</p>
+                            <p class="text-sm text-green-700">@TempData["Success"]</p>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @if (TempData["Error"] != null)
+                {
+                <div class="glass-card rounded-2xl p-5 border-l-4 border-red-500 bg-gradient-to-r from-red-50 to-pink-50 card-elevation animate-slide-up">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-gradient-to-br from-red-400 to-pink-500 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-semibold text-red-800">Erreur</p>
+                            <p class="text-sm text-red-700">@TempData["Error"]</p>
+                        </div>
+                    </div>
+                </div>
+                }
+
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+</div>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

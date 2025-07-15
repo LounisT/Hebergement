@@ -1,0 +1,284 @@
+@model IEnumerable<HebergementManager.Web.Models.HebergementViewModel>
+
+@{
+    ViewData["Title"] = "Hébergements";
+}
+<div class="space-y-8 animate-fade-in">
+    <!-- Header Section -->
+    <div class="flex items-center justify-between">
+        <div class="space-y-2">
+            <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent">
+                Hébergements
+            </h1>
+            <p class="text-gray-600 font-medium">Gérez vos hébergements et leurs disponibilités en toute simplicité</p>
+        </div>
+        <div class="flex items-center space-x-3">
+            <div class="hidden md:flex items-center space-x-2 text-sm text-gray-500">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span>24 hébergements actifs</span>
+            </div>
+            <a asp-action="Create" class="btn-gradient inline-flex items-center space-x-2 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                <span>Nouvel Hébergement</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtres modernisés -->
+    <div class="glass-card rounded-2xl p-6 card-elevation">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">🔍 Filtres de recherche</h3>
+                <p class="text-sm text-gray-500 mt-1">Trouvez exactement ce que vous cherchez</p>
+            </div>
+            <button class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+                Réinitialiser
+            </button>
+        </div>
+        
+        <form method="get" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Type d'hébergement</label>
+                    <div class="relative">
+                        <select name="type" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
+                            <option value="">Tous les types</option>
+                            <option value="Appartement">🏠 Appartement</option>
+                            <option value="Maison">🏡 Maison</option>
+                            <option value="Chambre">🛏️ Chambre</option>
+                            <option value="Villa">🏖️ Villa</option>
+                            <option value="Studio">🏢 Studio</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Ville</label>
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <input name="ville" type="text" placeholder="Paris, Lyon, Marseille..." 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Capacité minimum</label>
+                    <div class="relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <input name="capaciteMin" type="number" min="1" placeholder="1 personne" 
+                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-700">Prix maximum/nuit</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 font-medium">€</span>
+                        <input name="prixMax" type="number" min="0" step="10" placeholder="200" 
+                               class="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-end">
+                <button type="submit" class="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <span>Rechercher</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Liste des hébergements -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            @foreach (var hebergement in Model)
+            {
+                <div class="glass-card rounded-2xl overflow-hidden card-elevation hover:scale-[1.02] transition-all duration-300 group">
+                    <!-- Image placeholder avec gradient -->
+                    <div class="relative h-48 bg-gradient-to-br from-indigo-400 via-purple-500 to-pink-500 flex items-center justify-center overflow-hidden">
+                        <!-- Pattern overlay -->
+                        <div class="absolute inset-0 bg-black/10"></div>
+                        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%)"></div>
+                        
+                        <div class="relative z-10 text-center text-white">
+                            <svg class="w-16 h-16 mx-auto mb-2 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                            </svg>
+                            <p class="text-sm opacity-80 font-medium">@hebergement.Type</p>
+                        </div>
+                        
+                        <!-- Badge de statut -->
+                        <div class="absolute top-4 right-4">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
+                                <div class="w-1.5 h-1.5 bg-green-500 rounded-full mr-2 animate-pulse"></div>
+                                Disponible
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <!-- Contenu de la carte -->
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            <!-- Header avec nom et prix -->
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1 min-w-0">
+                                    <h3 class="text-lg font-bold text-gray-900 truncate group-hover:text-indigo-600 transition-colors">
+                                        @hebergement.Nom
+                                    </h3>
+                                    <p class="text-sm text-gray-500 flex items-center mt-1">
+                                        <svg class="w-4 h-4 mr-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        <span class="truncate">@hebergement.Adresse, @hebergement.Ville</span>
+                                    </p>
+                                </div>
+                                <div class="text-right ml-4">
+                                    <div class="text-xl font-bold text-gray-900">@hebergement.PrixParNuit.ToString("C")</div>
+                                    <div class="text-sm text-gray-500">par nuit</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Caractéristiques -->
+                            <div class="flex items-center justify-between text-sm">
+                                <div class="flex items-center text-gray-600">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                    </svg>
+                                    <span class="font-medium">@hebergement.CapaciteMax personnes</span>
+                                </div>
+                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                                    @hebergement.Type
+                                </span>
+                            </div>
+                            
+                            <!-- Description -->
+                            <p class="text-sm text-gray-600 line-clamp-2">@hebergement.Description</p>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="flex items-center space-x-2 mt-6 pt-4 border-t border-gray-100">
+                            <a asp-action="Details" asp-route-id="@hebergement.Id" 
+                               class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                                Voir
+                            </a>
+                            <a asp-action="Edit" asp-route-id="@hebergement.Id" 
+                               class="flex-1 inline-flex items-center justify-center px-4 py-2.5 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg font-medium transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                </svg>
+                                Modifier
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@hebergement.Id" method="post" class="inline" 
+                                  onsubmit="return confirm('⚠️ Êtes-vous sûr de vouloir supprimer cet hébergement ?\\n\\nCette action est irréversible.')">
+                                <button type="submit" class="p-2.5 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <!-- État vide modernisé -->
+        <div class="glass-card rounded-2xl p-12 text-center card-elevation">
+            <div class="max-w-md mx-auto">
+                <!-- Illustration vide -->
+                <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                    </svg>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Aucun hébergement pour le moment</h3>
+                <p class="text-gray-500 mb-8 max-w-sm mx-auto">
+                    Commencez par créer votre premier hébergement pour développer votre activité
+                </p>
+                
+                <a asp-action="Create" class="btn-gradient inline-flex items-center space-x-2 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <span>Créer mon premier hébergement</span>
+                </a>
+                
+                <!-- Stats encourageantes -->
+                <div class="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-gray-100">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-indigo-600">0</div>
+                        <div class="text-xs text-gray-500">Hébergements</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-green-600">€0</div>
+                        <div class="text-xs text-gray-500">Revenus</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-purple-600">0</div>
+                        <div class="text-xs text-gray-500">Réservations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    
+    .animate-fade-in {
+        animation: fade-in 0.6s ease-out;
+    }
+    
+    /* Bouton gradient animé */
+    .btn-gradient {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+        background-size: 200% 200%;
+        animation: gradient-shift 3s ease infinite;
+    }
+    
+    /* Glassmorphism */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Card elevation */
+    .card-elevation {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s ease;
+    }
+    
+    .card-elevation:hover {
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 
+                    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* Line clamp pour description */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+</style>

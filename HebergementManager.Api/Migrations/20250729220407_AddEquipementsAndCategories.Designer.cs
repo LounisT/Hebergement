@@ -3,6 +3,7 @@ using System;
 using HebergementManager.Api.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HebergementManager.Api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250729220407_AddEquipementsAndCategories")]
+    partial class AddEquipementsAndCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
@@ -25,7 +28,6 @@ namespace HebergementManager.Api.Migrations
 
                     b.Property<string>("Nom")
                         .IsRequired()
-                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -89,16 +91,15 @@ namespace HebergementManager.Api.Migrations
                     b.Property<decimal>("PrixParNuit")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("TypeHebergementId")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Ville")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("TypeHebergementId");
 
                     b.ToTable("Hebergements");
                 });
@@ -150,42 +151,15 @@ namespace HebergementManager.Api.Migrations
                     b.ToTable("Reservations");
                 });
 
-            modelBuilder.Entity("HebergementManager.Api.Models.TypeHebergement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TypeHebergement");
-                });
-
             modelBuilder.Entity("HebergementManager.Api.Models.Equipements", b =>
                 {
                     b.HasOne("HebergementManager.Api.Models.CategorieEquipement", "Categorie")
                         .WithMany("Equipement")
                         .HasForeignKey("CategorieEquipementId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categorie");
-                });
-
-            modelBuilder.Entity("HebergementManager.Api.Models.Hebergement", b =>
-                {
-                    b.HasOne("HebergementManager.Api.Models.TypeHebergement", "Type")
-                        .WithMany("Hebergement")
-                        .HasForeignKey("TypeHebergementId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HebergementManager.Api.Models.Reservation", b =>
@@ -193,7 +167,7 @@ namespace HebergementManager.Api.Migrations
                     b.HasOne("HebergementManager.Api.Models.Hebergement", "Hebergement")
                         .WithMany("Reservations")
                         .HasForeignKey("HebergementId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Hebergement");
@@ -207,11 +181,6 @@ namespace HebergementManager.Api.Migrations
             modelBuilder.Entity("HebergementManager.Api.Models.Hebergement", b =>
                 {
                     b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("HebergementManager.Api.Models.TypeHebergement", b =>
-                {
-                    b.Navigation("Hebergement");
                 });
 #pragma warning restore 612, 618
         }

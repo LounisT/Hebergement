@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿                        using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HebergementManager.Api.Models
@@ -9,9 +9,9 @@ namespace HebergementManager.Api.Models
         public int Id { get; set; }
         
         [Required]
-        public string Nom { get; set; }
+        public required string Nom { get; set; }
 
         [Required]
-        public ICollection<Hebergement> Hebergement { get; set; }
+        public required ICollection<Hebergement> Hebergement { get; set; }
     }
 }

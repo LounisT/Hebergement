@@ -15,7 +15,7 @@ namespace HebergementManager.Api.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
 
             modelBuilder.Entity("HebergementManager.Api.Models.CategorieEquipement", b =>
                 {
@@ -25,12 +25,38 @@ namespace HebergementManager.Api.Migrations
 
                     b.Property<string>("Nom")
                         .IsRequired()
-                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("CategorieEquipement");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nom = "Confort & intérieur"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nom = "Cuisine & repas"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nom = "Services & commodités"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Nom = "Extérieur & loisirs"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Nom = "Famille & sécurité"
+                        });
                 });
 
             modelBuilder.Entity("HebergementManager.Api.Models.Equipements", b =>
@@ -44,7 +70,6 @@ namespace HebergementManager.Api.Migrations
 
                     b.Property<string>("Nom")
                         .IsRequired()
-                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -52,6 +77,164 @@ namespace HebergementManager.Api.Migrations
                     b.HasIndex("CategorieEquipementId");
 
                     b.ToTable("Equipements");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategorieEquipementId = 1,
+                            Nom = "WiFi gratuit"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategorieEquipementId = 1,
+                            Nom = "Climatisation"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CategorieEquipementId = 1,
+                            Nom = "Télévision"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CategorieEquipementId = 1,
+                            Nom = "Chauffage"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CategorieEquipementId = 1,
+                            Nom = "Machine à laver"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            CategorieEquipementId = 1,
+                            Nom = "Sèche-cheveux"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            CategorieEquipementId = 1,
+                            Nom = "Fer à repasser"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            CategorieEquipementId = 2,
+                            Nom = "Cuisine équipée"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            CategorieEquipementId = 2,
+                            Nom = "Réfrigérateur"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            CategorieEquipementId = 2,
+                            Nom = "Micro-ondes"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            CategorieEquipementId = 2,
+                            Nom = "Lave-vaisselle"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            CategorieEquipementId = 2,
+                            Nom = "Cafetière"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            CategorieEquipementId = 2,
+                            Nom = "Ustensiles de cuisine"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            CategorieEquipementId = 3,
+                            Nom = "Parking gratuit"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            CategorieEquipementId = 3,
+                            Nom = "Ascenseur"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            CategorieEquipementId = 3,
+                            Nom = "Service de ménage"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            CategorieEquipementId = 4,
+                            Nom = "Balcon / Terrasse"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            CategorieEquipementId = 4,
+                            Nom = "Jardin"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            CategorieEquipementId = 4,
+                            Nom = "Piscine"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            CategorieEquipementId = 4,
+                            Nom = "Salle de sport"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            CategorieEquipementId = 4,
+                            Nom = "Barbecue"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            CategorieEquipementId = 5,
+                            Nom = "Lit bébé"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            CategorieEquipementId = 5,
+                            Nom = "Chaise haute"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            CategorieEquipementId = 5,
+                            Nom = "Détecteur de fumée"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            CategorieEquipementId = 5,
+                            Nom = "Détecteur de monoxyde de carbone"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            CategorieEquipementId = 5,
+                            Nom = "Trousse de premiers secours"
+                        });
                 });
 
             modelBuilder.Entity("HebergementManager.Api.Models.Hebergement", b =>
@@ -83,11 +266,10 @@ namespace HebergementManager.Api.Migrations
 
                     b.Property<string>("Nom")
                         .IsRequired()
-                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("PrixParNuit")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("TypeHebergementId")
                         .HasColumnType("INTEGER");
@@ -101,6 +283,21 @@ namespace HebergementManager.Api.Migrations
                     b.HasIndex("TypeHebergementId");
 
                     b.ToTable("Hebergements");
+                });
+
+            modelBuilder.Entity("HebergementManager.Api.Models.HebergementEquipement", b =>
+                {
+                    b.Property<int>("HebergementId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("EquipementId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("HebergementId", "EquipementId");
+
+                    b.HasIndex("EquipementId");
+
+                    b.ToTable("HebergementEquipements");
                 });
 
             modelBuilder.Entity("HebergementManager.Api.Models.Reservation", b =>
@@ -133,11 +330,10 @@ namespace HebergementManager.Api.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("PrixTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Statut")
-                        .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("Statut")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("TelephoneClient")
                         .IsRequired()
@@ -158,12 +354,33 @@ namespace HebergementManager.Api.Migrations
 
                     b.Property<string>("Nom")
                         .IsRequired()
-                        .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.ToTable("TypeHebergement");
+                    b.ToTable("TypeHebergements");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Nom = "Appartement"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Nom = "Chambre"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Nom = "Maison"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Nom = "Villa"
+                        });
                 });
 
             modelBuilder.Entity("HebergementManager.Api.Models.Equipements", b =>
@@ -171,7 +388,7 @@ namespace HebergementManager.Api.Migrations
                     b.HasOne("HebergementManager.Api.Models.CategorieEquipement", "Categorie")
                         .WithMany("Equipement")
                         .HasForeignKey("CategorieEquipementId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categorie");
@@ -182,10 +399,29 @@ namespace HebergementManager.Api.Migrations
                     b.HasOne("HebergementManager.Api.Models.TypeHebergement", "Type")
                         .WithMany("Hebergement")
                         .HasForeignKey("TypeHebergementId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Type");
+                });
+
+            modelBuilder.Entity("HebergementManager.Api.Models.HebergementEquipement", b =>
+                {
+                    b.HasOne("HebergementManager.Api.Models.Equipements", "Equipement")
+                        .WithMany("HebergementEquipements")
+                        .HasForeignKey("EquipementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HebergementManager.Api.Models.Hebergement", "Hebergement")
+                        .WithMany("HebergementEquipements")
+                        .HasForeignKey("HebergementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Equipement");
+
+                    b.Navigation("Hebergement");
                 });
 
             modelBuilder.Entity("HebergementManager.Api.Models.Reservation", b =>
@@ -193,7 +429,7 @@ namespace HebergementManager.Api.Migrations
                     b.HasOne("HebergementManager.Api.Models.Hebergement", "Hebergement")
                         .WithMany("Reservations")
                         .HasForeignKey("HebergementId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Hebergement");
@@ -204,8 +440,15 @@ namespace HebergementManager.Api.Migrations
                     b.Navigation("Equipement");
                 });
 
+            modelBuilder.Entity("HebergementManager.Api.Models.Equipements", b =>
+                {
+                    b.Navigation("HebergementEquipements");
+                });
+
             modelBuilder.Entity("HebergementManager.Api.Models.Hebergement", b =>
                 {
+                    b.Navigation("HebergementEquipements");
+
                     b.Navigation("Reservations");
                 });
 

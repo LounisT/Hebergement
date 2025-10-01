@@ -1,21 +1,21 @@
-@model HebergementViewModel;
+@model HebergementViewModel
+@using HebergementManager.Web.Services
 
 @{
     ViewData["Title"] = "Modifier " + Model.Nom;
+    var types = ViewBag.TypeHebergements as List<TypeHebergementDto>;
 }
 
 <div class="space-y-8 animate-fade-in">
     <!-- Header -->
     <div class="flex items-center justify-between">
-        <div class="space-y-2">
-            <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent">
-                Modifier l'hébergement
-            </h1>
-            <p class="text-gray-600 font-medium">Modifiez les informations de cet hébergement</p>
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Modifier l'hébergement</h1>
+            <p class="text-sm text-gray-600 mt-1">@Model.Nom</p>
         </div>
-        
-        <a asp-action="Index" 
-           class="inline-flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-xl font-medium transition-colors">
+
+        <a asp-action="Index"
+           class="inline-flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors text-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
             </svg>
@@ -30,10 +30,8 @@
             @Html.HiddenFor(m => m.Id)
             @Html.HiddenFor(m => m.DateCreation)
             
-            <div class="glass-card rounded-2xl p-8 card-elevation">
-                <div class="mb-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-2">📝 Informations générales</h2>
-                </div>
+            <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Informations générales</h2>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Nom -->
@@ -54,13 +52,16 @@
                     
                     <!-- Type -->
                     <div>
-                        <label asp-for="Type" class="block text-sm font-medium text-gray-700 mb-2"></label>
-                        <select asp-for="Type"
-                                asp-items="Html.GetEnumSelectList<HebergementViewModel.TypeHebergement>()"
+                        <label asp-for="TypeHebergementId" class="block text-sm font-medium text-gray-700 mb-2"></label>
+                        <select asp-for="TypeHebergementId"
                                 class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
                             <option value="">-- Sélectionnez un type d'hébergement --</option>
+                            @foreach (var type in types)
+                            {
+                                <option value="@type.Id">@type.Nom</option>
+                            }
                         </select>
-                        <span asp-validation-for="Type" class="text-red-500 text-sm mt-1"></span>
+                        <span asp-validation-for="TypeHebergementId" class="text-red-500 text-sm mt-1"></span>
                     </div>
                     
                     <!-- Capacité -->
@@ -95,10 +96,8 @@
             </div>
             
             <!-- Localisation -->
-            <div class="glass-card rounded-2xl p-8 card-elevation">
-                <div class="mb-6">
-                    <h2 class="text-xl font-semibold text-gray-900 mb-2">📍 Localisation</h2>
-                </div>
+            <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Localisation</h2>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Adresse -->
@@ -126,7 +125,58 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Équipements -->
+            <div class="bg-white rounded-lg p-6 shadow-sm border border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Équipements disponibles</h2>
+
+                @{
+                    var equipements = ViewBag.Equipements as List<CategorieEquipementDto>;
+                }
+
+                @if (equipements != null && equipements.Any())
+                {
+                    <div class="space-y-4">
+                        @foreach (var categorie in equipements)
+                        {
+                            <div class="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h3 class="font-medium text-gray-900">@categorie.CategorieNom</h3>
+                                    <button type="button"
+                                            class="category-toggle inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-indigo-600 bg-white hover:bg-indigo-50 rounded-md transition-colors border border-indigo-200"
+                                            data-category="@categorie.CategorieId"
+                                            onclick="toggleCategory(this)">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span>Tout</span>
+                                    </button>
+                                </div>
+                                @if (categorie.Equipements != null && categorie.Equipements.Any())
+                                {
+                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                                        @foreach (var equipement in categorie.Equipements)
+                                        {
+                                            <label for="equip_@equipement.Id" class="flex items-center p-2 rounded hover:bg-white cursor-pointer transition-colors">
+                                                <input type="checkbox" name="EquipementIds" value="@equipement.Id" id="equip_@equipement.Id"
+                                                       @(Model.EquipementIds.Contains(equipement.Id) ? "checked" : "")
+                                                       class="equipement-checkbox w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 focus:ring-2"
+                                                       data-category="@categorie.CategorieId" />
+                                                <span class="ml-2 text-sm text-gray-700">@equipement.Nom</span>
+                                            </label>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <p class="text-sm text-gray-500 italic">Aucun équipement</p>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
             <!-- Actions -->
             <div class="flex items-center justify-end space-x-4 pt-6">
                 <a asp-action="Index" 
@@ -147,31 +197,91 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    
+
+    <script>
+        function toggleCategory(button) {
+            const categoryId = button.dataset.category;
+            const equipementCheckboxes = document.querySelectorAll(`.equipement-checkbox[data-category="${categoryId}"]`);
+
+            // Vérifier si tous sont déjà cochés
+            const allChecked = Array.from(equipementCheckboxes).every(cb => cb.checked);
+
+            // Inverser l'état
+            equipementCheckboxes.forEach(cb => {
+                cb.checked = !allChecked;
+            });
+
+            // Mettre à jour le texte et le style du bouton
+            updateCategoryButton(button, !allChecked);
+        }
+
+        function updateCategoryButton(button, allChecked) {
+            const span = button.querySelector('span');
+            const svg = button.querySelector('svg');
+
+            if (allChecked) {
+                span.textContent = 'Aucun';
+                button.classList.remove('text-indigo-600', 'bg-white', 'hover:bg-indigo-50');
+                button.classList.add('text-red-600', 'bg-red-50', 'hover:bg-red-100');
+                svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path>';
+            } else {
+                span.textContent = 'Tout';
+                button.classList.remove('text-red-600', 'bg-red-50', 'hover:bg-red-100');
+                button.classList.add('text-indigo-600', 'bg-white', 'hover:bg-indigo-50');
+                svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>';
+            }
+        }
+
+        // Au chargement, vérifier l'état de chaque catégorie
+        document.addEventListener('DOMContentLoaded', function() {
+            const categoryButtons = document.querySelectorAll('.category-toggle');
+
+            categoryButtons.forEach(button => {
+                const categoryId = button.dataset.category;
+                const equipementCheckboxes = document.querySelectorAll(`.equipement-checkbox[data-category="${categoryId}"]`);
+                const allChecked = Array.from(equipementCheckboxes).every(cb => cb.checked);
+
+                updateCategoryButton(button, allChecked);
+            });
+
+            // Écouter les changements sur les checkboxes d'équipement
+            document.querySelectorAll('.equipement-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const categoryId = this.dataset.category;
+                    const button = document.querySelector(`.category-toggle[data-category="${categoryId}"]`);
+                    const equipementCheckboxes = document.querySelectorAll(`.equipement-checkbox[data-category="${categoryId}"]`);
+                    const allChecked = Array.from(equipementCheckboxes).every(cb => cb.checked);
+
+                    updateCategoryButton(button, allChecked);
+                });
+            });
+        });
+    </script>
+
     <style>
         .glass-card {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        
+
         .card-elevation {
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
                         0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        
+
         .btn-gradient {
             background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
             background-size: 200% 200%;
             animation: gradient-shift 3s ease infinite;
         }
-        
-  
-        
+
+
+
         .animate-fade-in {
             animation: fadeIn 0.6s ease-out;
         }
-        
- 
+
+
     </style>
 }

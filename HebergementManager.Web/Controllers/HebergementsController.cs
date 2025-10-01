@@ -15,6 +15,12 @@ public class HebergementsController : Controller
     public async Task<IActionResult> Index()
     {
         var hebergements = await _hebergementService.GetAllAsync();
+        var types = await _hebergementService.GetTypesHebergementAsync();
+        var equipements = await _hebergementService.GetEquipementsAsync();
+
+        ViewBag.TypeHebergements = types;
+        ViewBag.Equipements = equipements;
+
         return View(hebergements);
     }
     public async Task<IActionResult> Details(int id)
@@ -22,12 +28,21 @@ public class HebergementsController : Controller
         var hebergement = await _hebergementService.GetByIdAsync(id);
         if (hebergement == null)
             return NotFound();
-        
+
+        var types = await _hebergementService.GetTypesHebergementAsync();
+        var equipements = await _hebergementService.GetEquipementsAsync();
+        ViewBag.TypeHebergements = types;
+        ViewBag.Equipements = equipements;
+
         return View(hebergement);
     }
 
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
+        var types = await _hebergementService.GetTypesHebergementAsync();
+        var equipements = await _hebergementService.GetEquipementsAsync();
+        ViewBag.TypeHebergements = types;
+        ViewBag.Equipements = equipements;
         return View();
     }
 
@@ -36,7 +51,7 @@ public class HebergementsController : Controller
     public async Task<IActionResult> Create(HebergementViewModel model)
     {
         if (ModelState.IsValid)
-        { 
+        {
             var success = await _hebergementService.CreateAsync(model);
             if (success)
             {
@@ -45,7 +60,11 @@ public class HebergementsController : Controller
             }
             ModelState.AddModelError("", "Erreur lors de la création");
         }
-        
+
+        var types = await _hebergementService.GetTypesHebergementAsync();
+        var equipements = await _hebergementService.GetEquipementsAsync();
+        ViewBag.TypeHebergements = types;
+        ViewBag.Equipements = equipements;
         return View(model);
     }
 
@@ -54,7 +73,12 @@ public class HebergementsController : Controller
         var hebergement = await _hebergementService.GetByIdAsync(id);
         if (hebergement == null)
             return NotFound();
-        
+
+        var types = await _hebergementService.GetTypesHebergementAsync();
+        var equipements = await _hebergementService.GetEquipementsAsync();
+        ViewBag.TypeHebergements = types;
+        ViewBag.Equipements = equipements;
+
         return View(hebergement);
     }
 
@@ -75,7 +99,11 @@ public class HebergementsController : Controller
             }
             ModelState.AddModelError("", "Erreur lors de la modification");
         }
-        
+
+        var types = await _hebergementService.GetTypesHebergementAsync();
+        var equipements = await _hebergementService.GetEquipementsAsync();
+        ViewBag.TypeHebergements = types;
+        ViewBag.Equipements = equipements;
         return View(model);
     }
 

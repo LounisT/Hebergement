@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace HebergementManager.Web.Models;
 
@@ -29,8 +30,12 @@ public class HebergementViewModel
     public string CodePostal { get; set; } = string.Empty;
     
     [Required(ErrorMessage = "Le type d'hébergement est obligatoire")]
-    public TypeHebergement Type { get; set; }  // Utiliser l'enum directement
-                                               // 
+    [Display(Name = "Type d'hébergement")]
+    public int TypeHebergementId { get; set; }
+
+    [JsonIgnore]
+    public string TypeNom { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "La capacité maximale est obligatoire")]
     [Range(1, 50, ErrorMessage = "La capacité doit être entre 1 et 50 personnes")]
     [Display(Name = "Capacité maximale")]
@@ -44,23 +49,14 @@ public class HebergementViewModel
     public bool EstActif { get; set; } = true;
     
     public DateTime DateCreation { get; set; } = DateTime.Now;
-    
-    // Propriétés calculées pour l'affichage
-    public string AdresseComplete => $"{Adresse}, {CodePostal} {Ville}";
-    public string PrixFormate => PrixParNuit.ToString("C");
-    public string TypeDisplay => Type.ToString();
 
-    public enum TypeHebergement
-    {
-        [Display(Name = "Appartement")]
-        Appartement = 0,
-        [Display(Name = "Maison")]
-        Maison = 1,
-        [Display(Name = "Villa")]
-        Villa = 2,
-        [Display(Name = "Studio")]
-        Studio = 3,
-        [Display(Name = "Chambre")]
-        Chambre = 4
-    }
+    // Liste des IDs des équipements sélectionnés
+    public List<int> EquipementIds { get; set; } = new();
+
+    // Propriétés calculées pour l'affichage (ignorées pour la sérialisation)
+    [JsonIgnore]
+    public string AdresseComplete => $"{Adresse}, {CodePostal} {Ville}";
+
+    [JsonIgnore]
+    public string PrixFormate => PrixParNuit.ToString("C");
 }

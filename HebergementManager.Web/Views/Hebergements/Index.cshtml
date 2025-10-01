@@ -1,95 +1,82 @@
 @model IEnumerable<HebergementManager.Web.Models.HebergementViewModel>
+@using HebergementManager.Web.Services
 
 @{
     ViewData["Title"] = "Hébergements";
+    var types = ViewBag.TypeHebergements as List<TypeHebergementDto>;
 }
 <div class="space-y-8 animate-fade-in">
     <!-- Header Section -->
     <div class="flex items-center justify-between">
-        <div class="space-y-2">
-            <h1 class="text-4xl font-bold bg-gradient-to-r from-gray-900 via-indigo-900 to-purple-900 bg-clip-text text-transparent">
-                Hébergements
-            </h1>
-            <p class="text-gray-600 font-medium">Gérez vos hébergements et leurs disponibilités en toute simplicité</p>
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Hébergements</h1>
+            <p class="text-sm text-gray-600 mt-1">Gérez vos hébergements</p>
         </div>
         <div class="flex items-center space-x-3">
-            <div class="hidden md:flex items-center space-x-2 text-sm text-gray-500">
-                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>24 hébergements actifs</span>
-            </div>
-            <a asp-action="Create" class="btn-gradient inline-flex items-center space-x-2 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105">
+            @if (Model != null)
+            {
+                var actifsCount = Model.Count(h => h.EstActif);
+                <div class="hidden md:flex items-center space-x-2 text-sm text-gray-600">
+                    <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span>@actifsCount actif@(actifsCount > 1 ? "s" : "")</span>
+                </div>
+            }
+            <a asp-action="Create" class="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                 </svg>
-                <span>Nouvel Hébergement</span>
+                <span>Nouveau</span>
             </a>
         </div>
     </div>
 
-    <!-- Filtres modernisés -->
-    <div class="glass-card rounded-2xl p-6 card-elevation">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h3 class="text-lg font-semibold text-gray-900">🔍 Filtres de recherche</h3>
-                <p class="text-sm text-gray-500 mt-1">Trouvez exactement ce que vous cherchez</p>
-            </div>
-            <button class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
+    <!-- Filtres -->
+    <div class="bg-white rounded-lg p-5 shadow-sm border border-gray-200">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-semibold text-gray-900">Filtres</h3>
+            <button type="button" onclick="window.location.href='@Url.Action("Index")'" class="text-indigo-600 hover:text-indigo-700 text-sm font-medium">
                 Réinitialiser
             </button>
         </div>
-        
-        <form method="get" class="space-y-6">
+
+        <form method="get" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700">Type d'hébergement</label>
-                    <div class="relative">
-                        <select name="type" class="w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all">
-                            <option value="">Tous les types</option>
-                            <option value="Appartement">🏠 Appartement</option>
-                            <option value="Maison">🏡 Maison</option>
-                            <option value="Chambre">🛏️ Chambre</option>
-                            <option value="Villa">🏖️ Villa</option>
-                            <option value="Studio">🏢 Studio</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Type</label>
+                    <select name="type" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm">
+                        <option value="">Tous</option>
+                        @if (types != null)
+                        {
+                            foreach (var type in types)
+                            {
+                                <option value="@type.Nom">@type.Nom</option>
+                            }
+                        }
+                    </select>
                 </div>
-                
-                <div class="space-y-2">
+
+                <div>
                     <label class="text-sm font-medium text-gray-700">Ville</label>
-                    <div class="relative">
-                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                        </svg>
-                        <input name="ville" type="text" placeholder="Paris, Lyon, Marseille..." 
-                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
-                    </div>
+                    <input name="ville" type="text" placeholder="Paris..."
+                           class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" />
                 </div>
-                
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700">Capacité minimum</label>
-                    <div class="relative">
-                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                        </svg>
-                        <input name="capaciteMin" type="number" min="1" placeholder="1 personne" 
-                               class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
-                    </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Capacité min.</label>
+                    <input name="capaciteMin" type="number" min="1" placeholder="1"
+                           class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" />
                 </div>
-                
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-gray-700">Prix maximum/nuit</label>
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 font-medium">€</span>
-                        <input name="prixMax" type="number" min="0" step="10" placeholder="200" 
-                               class="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all" />
-                    </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-700">Prix max./nuit</label>
+                    <input name="prixMax" type="number" min="0" step="10" placeholder="200"
+                           class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm" />
                 </div>
             </div>
-            
+
             <div class="flex justify-end">
-                <button type="submit" class="inline-flex items-center space-x-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button type="submit" class="inline-flex items-center space-x-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
                     <span>Rechercher</span>
@@ -115,7 +102,7 @@
                             <svg class="w-16 h-16 mx-auto mb-2 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                             </svg>
-                            <p class="text-sm opacity-80 font-medium">@hebergement.Type</p>
+                            <p class="text-sm opacity-80 font-medium">@(types?.FirstOrDefault(t => t.Id == hebergement.TypeHebergementId)?.Nom ?? "Non spécifié")</p>
                         </div>
                         
                         <!-- Badge de statut -->
@@ -159,14 +146,35 @@
                                     <span class="font-medium">@hebergement.CapaciteMax personnes</span>
                                 </div>
                                 <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                                    @hebergement.Type
+                                    @(types?.FirstOrDefault(t => t.Id == hebergement.TypeHebergementId)?.Nom ?? "Non spécifié")
                                 </span>
                             </div>
                             
                             <!-- Description -->
                             <p class="text-sm text-gray-600 line-clamp-2">@hebergement.Description</p>
+
+                            <!-- Équipements -->
+                            @if (hebergement.EquipementIds != null && hebergement.EquipementIds.Any())
+                            {
+                                var equipements = ViewBag.Equipements as List<CategorieEquipementDto>;
+                                var hebergementEquipements = equipements?.SelectMany(c => c.Equipements)
+                                    .Where(e => hebergement.EquipementIds.Contains(e.Id))
+                                    .ToList();
+
+                                @if (hebergementEquipements != null && hebergementEquipements.Any())
+                                {
+                                    <div class="flex flex-wrap items-center gap-2 text-xs text-gray-500 pt-3 border-t border-gray-100 mt-3">
+                                        @foreach (var equip in hebergementEquipements)
+                                        {
+                                            <span class="inline-flex items-center px-2 py-1 bg-gray-100 rounded-md">
+                                                ✓ @equip.Nom
+                                            </span>
+                                        }
+                                    </div>
+                                }
+                            }
                         </div>
-                        
+
                         <!-- Actions -->
                         <div class="flex items-center space-x-2 mt-6 pt-4 border-t border-gray-100">
                             <a asp-action="Details" asp-route-id="@hebergement.Id" 
@@ -209,7 +217,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
                     </svg>
                 </div>
-                
+
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Aucun hébergement pour le moment</h3>
                 <p class="text-gray-500 mb-8 max-w-sm mx-auto">
                     Commencez par créer votre premier hébergement pour développer votre activité

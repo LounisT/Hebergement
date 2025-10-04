@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Services
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpClient<HebergementService>();
+builder.Services.AddHttpClient<ReservationService>();
 
 var app = builder.Build();
 

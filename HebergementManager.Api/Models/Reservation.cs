@@ -3,7 +3,6 @@ namespace HebergementManager.Api.Models;
 public class Reservation
 {
     public int Id { get; set; }
-    public int HebergementId { get; set; }
     public string NomClient { get; set; } = string.Empty;
     public string EmailClient { get; set; } = string.Empty;
     public string TelephoneClient { get; set; } = string.Empty;
@@ -14,7 +13,8 @@ public class Reservation
     public StatutReservation Statut { get; set; } = StatutReservation.EnAttente;
     public DateTime DateReservation { get; set; } = DateTime.Now;
     
-    public Hebergement Hebergement { get; set; } = null!;
+    public int HebergementId { get; set; }
+    public virtual Hebergement Hebergement { get; set; } = null!;
 }
 
 public enum StatutReservation

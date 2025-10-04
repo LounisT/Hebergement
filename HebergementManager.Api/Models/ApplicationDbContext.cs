@@ -84,5 +84,12 @@ public class ApplicationDbContext : DbContext
         new { Id = 25, CategorieEquipementId = 5, Nom = "Détecteur de monoxyde de carbone" },
         new { Id = 26, CategorieEquipementId = 5, Nom = "Trousse de premiers secours" }
     );
+
+    modelBuilder.Entity<TypeReservation>().HasData(
+        new { Id = 1, Nom = "En attente"},
+        new { Id = 2, Nom = "Confirmée"},
+        new { Id = 3, Nom = "Annulé"},
+        new { Id = 4, Nom = "Terminée"}
+        );
     }
 }
